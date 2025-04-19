@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Chat Messenger</title>
+
+  <!-- Eigenes CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <span class="navbar-brand">Chat Messenger</span>
+  </nav>
+
+  <main class="chat-container" id="chat">
+    <!-- Beispiel‑Nachrichten -->
+    <div class="message right">
+      <span>hello, i am ...</span>
+      <span class="msg-date">10:00</span>
+    </div>
+
+    <div class="message left">
+      <span>Sprech Dutsch du Hurensohn</span>
+      <span class="msg-date">10:01</span>
+    </div>
+  </main>
+
+  <form class="fixed-form" id="chatForm" autocomplete="off">
+    <input type="text" name="message" placeholder="Gib deine Nachricht ein …" required>
+    <button type="submit">Senden</button>
+  </form>
+
+  <!-- Eigenes JS -->
+  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>
