@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Wrapper zentriert alles -->
+<div class="auth-wrapper">
+  <!-- Card‑Look -->
+  <div class="auth-card">
+    <h2 style="margin:0 0 .5rem;">Anmelden</h2>
+
+    <form method="post">
+      <input name="username"  placeholder="Benutzername" required>
+      <input type="password" name="password" placeholder="Passwort" required>
+      <button type="submit">Einloggen</button>
+    </form>
+
+    <p class="auth-alt">
+      Noch kein Konto? <a href="{{ url_for('register') }}">Registrieren</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

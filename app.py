@@ -1,10 +1,80 @@
-# save this as app.py
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, flash, request
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
 
 app = Flask(__name__)
+app.config.from_object("config.Config")
 
+db     = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = "login"        # Umleitung für @login_required
+
+# ---------- Model ---------- #
+class User(db.Model, UserMixin):
+    id       = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), unique=True, nullable=False)
+    email    = db.Column(db.String(120), unique=True, nullable=False)
+    pw_hash  = db.Column(db.String(128), nullable=False)
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.pw_hash, password)
+
+# ---------- Loader ---------- #
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+# ---------- Routen ---------- #
 @app.route("/")
-def home():
-    return render_template("index.html")
+@login_required
+def index():
+    return render_template("index.html", user=current_user)
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        uname  = request.form["username"].strip()
+        mail   = request.form["email"].strip().lower()
+        passwd = request.form["password"]
+
+        if User.query.filter((User.username == uname) | (User.email == mail)).first():
+            flash("Benutzername oder E‑Mail schon vergeben", "danger")
+            return redirect(url_for("register"))
+
+        user = User(
+            username = uname,
+            email    = mail,
+            pw_hash  = bcrypt.generate_password_hash(passwd).decode("utf-8")
+        )
+        db.session.add(user)
+        db.session.commit()
+        flash("Account erstellt! Du kannst dich jetzt anmelden.", "success")
+        return redirect(url_for("login"))
+    return render_template("register.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        uname  = request.form["username"]
+        passwd = request.form["password"]
+        user = User.query.filter_by(username=uname).first()
+
+        if user and user.check_password(passwd):
+            login_user(user)
+            return redirect(url_for("index"))
+        flash("Falsche Anmeldedaten", "danger")
+    return render_template("login.html")
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+
+# ---------- Initialer DB‑Setup ---------- #
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()        # legt chat.db an (SQLite)
     app.run(debug=True)
