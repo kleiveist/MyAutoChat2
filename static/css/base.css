@@ -18,3 +18,23 @@
     border-bottom:1px solid var(--border);
     font-weight:600;
   }
+
+  .navbar {
+    display:flex;                 /* links/rechts nebeneinander */
+    justify-content:space-between;
+    align-items:center;
+    padding:var(--pad);
+    border-bottom:1px solid var(--border);
+    font-weight:600;
+  }
+
+  .logout-btn {
+    padding:.4rem 1rem;
+    background:#ff5555;           /* roter Button */
+    color:#fff;
+    border-radius:var(--radius);
+    text-decoration:none;
+    font-size:.9rem;
+  }
+
+  .logout-btn:hover { background:#e04040; }

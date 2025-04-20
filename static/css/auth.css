@@ -40,3 +40,29 @@
     text-align:center;
     font-size:.9rem;
   }
+
+  /* Abstand in der Form */
+.auth-form {
+  display:flex;
+  flex-direction:column;
+  gap:1rem;                      /* 1 rem Abstand zwischen den drei Elementen */
+}
+
+/* Flash‑Container in der Card */
+.flash-box {
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+  margin-bottom:1rem;            /* Abstand unter den Meldungen */
+}
+
+.flash {                         /* Grundstil */
+  padding:.6rem .8rem;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  font-size:.9rem;
+}
+
+/* Kategorieabhängige Farben – gern anpassen */
+.flash.danger  { background:#ffe5e5; color:#b30000; }
+.flash.success { background:#e6ffe6; color:#006600; }
