@@ -42,7 +42,13 @@ def register():
     if request.method == "POST":
         uname  = request.form["username"].strip()
         mail   = request.form["email"].strip().lower()
-        passwd = request.form["password"]
+        passwd   = request.form["password"]
+        passwd2  = request.form["password2"]
+
+        # Passwort‑Wiederholung prüfen
+        if passwd != passwd2:
+            flash("Die Passwörter stimmen nicht überein.", "danger")
+            return redirect(url_for("register"))
 
         if User.query.filter((User.username == uname) | (User.email == mail)).first():
             flash("Benutzername oder E‑Mail schon vergeben", "danger")
@@ -80,9 +86,14 @@ def logout():
 
 @app.route("/delete_account", methods=["POST"])
 def delete_account():
-    data  = request.get_json()
-    uname = data.get("username", "").strip()
-    pw    = data.get("password", "")
+    data            = request.get_json() or {}
+    uname           = data.get("username", "").strip()
+    pw              = data.get("password", "")
+    pw_confirm      = data.get("password_confirm", "")
+
+    # Passwort‑Wiederholung prüfen
+    if pw != pw_confirm:
+        return "Passwörter stimmen nicht überein", 400
 
     user = User.query.filter_by(username=uname).first()
     if not user or not user.check_password(pw):
