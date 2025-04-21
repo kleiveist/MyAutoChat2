@@ -3,12 +3,12 @@
 <div class="auth-wrapper">
   <div class="auth-card">
 
-    {# ---------- Flash‑Meldungen (z. B. „Benutzer existiert schon“) ---------- #}
+    {# ---------- Flash-Meldungen ---------- #}
     {% with messages = get_flashed_messages(with_categories=True) %}
       {% if messages %}
         <div class="flash-box">
-          {% for cat,msg in messages %}
-            <div class="flash {{cat}}">{{ msg }}</div>
+          {% for cat, msg in messages %}
+            <div class="flash {{ cat }}">{{ msg }}</div>
           {% endfor %}
         </div>
       {% endif %}
@@ -24,7 +24,8 @@
     </form>
 
     <p class="auth-alt">
-      Schon dabei? <a href="{{ url_for('login') }}">Anmelden</a>
+      Schon registriert?
+      <a href="{{ url_for('login') }}">Jetzt anmelden</a>
     </p>
   </div>
 </div>

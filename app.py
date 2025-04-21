@@ -1,10 +1,15 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
+import os
+from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
 
+
 app = Flask(__name__)
 app.config.from_object("config.Config")
+
+# Sicherstellen, dass der instance-Ordner existiert
+os.makedirs(os.path.join(app.root_path, "instance"), exist_ok=True)
 
 db     = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -73,8 +78,23 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
+@app.route("/delete_account", methods=["POST"])
+def delete_account():
+    data  = request.get_json()
+    uname = data.get("username", "").strip()
+    pw    = data.get("password", "")
+
+    user = User.query.filter_by(username=uname).first()
+    if not user or not user.check_password(pw):
+        return "Benutzername oder Passwort falsch", 400
+
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"status": "deleted"}), 200
+
 # ---------- Initialer DB‑Setup ---------- #
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()        # legt chat.db an (SQLite)
+        # Damit wird jetzt instance/login.db angelegt (statt chat.db im Projekt-Root)
+        db.create_all()
     app.run(debug=True)

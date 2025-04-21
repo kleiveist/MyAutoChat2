@@ -1,17 +1,38 @@
-<!DOCTYPE html><html lang="de"><head>
-    <meta charset="utf-8"><title>{% block title %}Chat{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
-  </head><body>
-    {% with messages = get_flashed_messages(with_categories=True) %}
-      {% if messages %}
-        <ul class="flash-list">
-          {% for cat,msg in messages %}
-            <li class="flash {{cat}}">{{msg}}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
-  </body></html>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Chat{% endblock %}</title>
+
+  <!-- Gemeinsame Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+
+<body>
+  {# ---------- globale Flash‑Meldungen ---------- #}
+  {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+      <ul class="flash-list">
+        {% for cat, msg in messages %}
+          <li class="flash {{ cat }}">{{ msg }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  {# ---------- Seiteninhalt ---------- #}
+  {% block content %}{% endblock %}
+
+  {# ---------- Auth‑Skript nur für /login & /register ---------- #}
+  {% if request.endpoint in ['login', 'register'] %}
+    <script>
+      /* Flask‑URLs ans JS durchreichen */
+      const deleteUrl   = "{{ url_for('delete_account') }}";
+      const redirectUrl = "{{ url_for('login') }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+  {% endif %}
+</body>
+</html>

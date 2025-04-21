@@ -66,3 +66,57 @@
 /* Kategorieabhängige Farben – gern anpassen */
 .flash.danger  { background:#ffe5e5; color:#b30000; }
 .flash.success { background:#e6ffe6; color:#006600; }
+
+/* ---------- Modal‑Overlay ---------- */
+.modal-overlay {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.35);
+  /* standardmäßig VERSTECKT */
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+}
+/* Wenn die Klasse .show gesetzt ist → anzeigen */
+.modal-overlay.show {
+  display:flex;
+}
+/* ---------- Modal‑Card (gleicher Stil wie .auth-card) ---------- */
+.modal-card {
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 2px 12px rgba(0,0,0,.1);
+  width:100%;
+  max-width:420px;
+  padding:2rem;
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+
+/* Formular‑Layout im Modal */
+.modal-card form {
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+
+.modal-actions {
+  display:flex;
+  justify-content:flex-end;
+  gap:.5rem;
+}
+
+.modal-actions .danger {
+  background:#ff5555;
+  color:#fff;
+}
+
+.modal-actions button {
+  padding:.5rem 1rem;
+  border:none;
+  border-radius:var(--radius);
+  cursor:pointer;
+}

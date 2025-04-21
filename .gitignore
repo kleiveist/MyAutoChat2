@@ -1,2 +1,4 @@
 /venv
-/_V0.0.0.5-ExInTree
+/_InTree
+/instance/*.db
+__pycache__/*.py[cod]
