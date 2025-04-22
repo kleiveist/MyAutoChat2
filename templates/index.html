@@ -4,37 +4,61 @@
   <meta charset="utf-8">
   <title>Chat Messenger</title>
 
-  <!-- Eigenes CSS -->
+  <!-- Styles -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/toolbar.css') }}">
 </head>
 <body>
-  <nav class="navbar">
-    <span class="navbar-brand">Chat Messenger</span>
 
-    <!-- Logout‑Link -->
-    <a href="{{ url_for('logout') }}" class="logout-btn">Abmelden</a>
+  <!-- Navbar mit Toolbar‑Toggle -->
+  <nav class="navbar">
+    <!-- Toolbar‑Toggle-Button -->
+    <button id="toolbarToggle" class="navbar-brand btn-brand" aria-label="Toolbar umschalten">
+      Chat Messenger
+    </button>
+
+    <div class="navbar-actions">
+      <!-- Theme‑Toggle -->
+      <button id="themeToggle" class="theme-btn" aria-label="Design umschalten"
+              data-icon-light="{{ url_for('static', filename='img/theme.png') }}"
+              data-icon-dark="{{ url_for('static', filename='img/themedark.png') }}">
+        <img src="{{ url_for('static', filename='img/theme.png') }}"
+             width="24" height="24" alt="">
+      </button>
+
+      <!-- Logout -->
+      <a href="{{ url_for('logout') }}" class="logout-btn">Abmelden</a>
+    </div>
   </nav>
 
+  <!-- Leere Toolbar, wird per JS ein-/ausgeblendet -->
+  <div id="toolbar" class="toolbar hidden">
+    <!-- Später füllen wir hier die Chat-Liste o.Ä. -->
+  </div>
+
+  <!-- ---------- Chat‑Inhalt ---------- -->
   <main class="chat-container" id="chat">
-    <!-- Beispiel‑Nachrichten -->
     <div class="message right">
       <span>hello, i am ...</span>
       <span class="msg-date">10:00</span>
     </div>
 
     <div class="message left">
-      <span>Sprech Dutsch du Hurensohn</span>
+      <span>Sprech Deutsch …</span>
       <span class="msg-date">10:01</span>
     </div>
   </main>
 
   <form class="fixed-form" id="chatForm" autocomplete="off">
-    <input type="text" name="message" placeholder="Gib deine Nachricht ein …" required>
+    <input type="text" name="message" placeholder="Gib deine Nachricht ein …" required>
     <button type="submit">Senden</button>
   </form>
 
-  <!-- Eigenes JS -->
+  <!-- Skripte -->
   <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/toolbar.js') }}"></script>
+
 </body>
 </html>

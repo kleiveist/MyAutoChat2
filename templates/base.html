@@ -9,8 +9,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 </head>
-
 <body>
+
   {# ---------- globale Flash‑Meldungen ---------- #}
   {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
@@ -28,11 +28,18 @@
   {# ---------- Auth‑Skript nur für /login & /register ---------- #}
   {% if request.endpoint in ['login', 'register'] %}
     <script>
-      /* Flask‑URLs ans JS durchreichen */
+      // Flask‑URLs ans JS durchreichen (kein Redeclare mehr)
       const deleteUrl   = "{{ url_for('delete_account') }}";
       const redirectUrl = "{{ url_for('login') }}";
     </script>
     <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
   {% endif %}
+
+  {# ---------- Theme‑Switcher immer laden ---------- #}
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+
+  {# ---------- toolbar ---------- #}
+  <script src="{{ url_for('static', filename='js/toolbar.js') }}"></script>
+
 </body>
 </html>

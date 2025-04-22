@@ -1,0 +1,56 @@
+/* -------------------------------------------------
+   Toolbar‑Styles (Sidebar links unterhalb der Navbar)
+   ------------------------------------------------- */
+
+/* ---------- Globale Variablen für die Sidebar ---------- */
+:root {
+    /* Breite der Sidebar */
+    --toolbar-width: 250px;
+
+    /* Spezielle Hintergründe, damit die Toolbar sich
+       sowohl im Hell‑ als auch im Dunkel‑Modus abhebt */
+    --bg-toolbar-light: #f7f7f7;   /* etwas dunkler als weiß */
+    --bg-toolbar-dark:  #262626;   /* etwas heller als #1e1e1e */
+
+    /* HÖHE der Navbar – muss zu deinem Layout passen! */
+    --navbar-height: 3.5rem;       /* ≈ 56 px */
+  }
+
+  /* ---------- Layout‑Logik ---------- */
+
+  /* Chat rückt nach rechts, wenn die Toolbar offen ist */
+  body.toolbar-open .chat-container {
+    margin-left: var(--toolbar-width);
+  }
+
+  /* sanfte Animation für das Ein‑ / Ausblenden */
+  .chat-container {
+    transition: margin-left 0.3s ease;
+  }
+
+  /* Grund­layout der Sidebar */
+  #toolbar {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    height: calc(100vh - var(--navbar-height));
+    width: var(--toolbar-width);
+
+    background: var(--bg-toolbar-light);
+    border-right: 1px solid var(--border);
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+
+    overflow-y: auto;
+    z-index: 1000;          /* über Inhalt, aber unter Navbar‑Toggle */
+  }
+
+  /* Dunkelmodus‑Überschreibungen */
+  .dark-theme #toolbar {
+    background: var(--bg-toolbar-dark);
+    border-right-color: var(--border);
+  }
+
+  /* Toolbar ausblenden */
+  #toolbar.hidden {
+    display: none;
+  }

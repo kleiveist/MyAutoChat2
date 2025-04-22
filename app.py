@@ -43,7 +43,7 @@ def register():
         uname  = request.form["username"].strip()
         mail   = request.form["email"].strip().lower()
         passwd   = request.form["password"]
-        passwd2  = request.form["password2"]
+        passwd2  = request.form["password_confirm"]
 
         # Passwort‑Wiederholung prüfen
         if passwd != passwd2:

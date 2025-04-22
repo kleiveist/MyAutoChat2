@@ -1,40 +1,95 @@
+/* static/css/base.css */
+
 :root {
-    --bg-left:  #f1f1f1;
-    --bg-right: #e6ffe6;
-    --border:   #dddddd;
-    --radius:   6px;
-    --pad:      1rem;
-    --width:    800px;
-    font-family: system-ui, sans-serif;
-  }
+  /* --------- Light Theme (Default) --------- */
+  --bg-page:  #ffffff;
+  --bg-left:  #f1f1f1;
+  --bg-right: #e6ffe6;
+  --bg-card:  #ffffff;
+  --border:   #dddddd;
+  --text:     #000000;
 
-  /* Reset */
-  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  --radius: 6px;
+  --pad:    1rem;
+  --width:  800px;
 
-  body { background:#fff; }
+  font-family: system-ui, sans-serif;
+}
 
-  .navbar {
-    padding:var(--pad);
-    border-bottom:1px solid var(--border);
-    font-weight:600;
-  }
+/* --------- Dark Theme Overrides --------- */
+.dark-theme {
+  --bg-page:  #1e1e1e;
+  --bg-left:  #2b2b2b;
+  --bg-right: #214021;
+  --bg-card:  #262626;
+  --border:   #444444;
+  --text:     #eeeeee;
+}
 
-  .navbar {
-    display:flex;                 /* links/rechts nebeneinander */
-    justify-content:space-between;
-    align-items:center;
-    padding:var(--pad);
-    border-bottom:1px solid var(--border);
-    font-weight:600;
-  }
+/* ---------- Reset ---------- */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 
-  .logout-btn {
-    padding:.4rem 1rem;
-    background:#ff5555;           /* roter Button */
-    color:#fff;
-    border-radius:var(--radius);
-    text-decoration:none;
-    font-size:.9rem;
-  }
+/* ---------- Global ---------- */
+body {
+  background: var(--bg-page);
+  color: var(--text);
+}
 
-  .logout-btn:hover { background:#e04040; }
+/* ---------- Navbar ---------- */
+.navbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:var(--pad);
+  border-bottom:1px solid var(--border);
+  font-weight:600;
+}
+
+/* --- Nav actions container --- */
+.navbar-actions {
+  display:flex;
+  align-items:center;
+  gap:1rem;
+}
+
+/* --- Theme toggle button --- */
+.theme-btn {
+  background:none;
+  border:none;
+  padding:0;
+  cursor:pointer;
+}
+.theme-btn img { display:block; }
+
+/* --- Logout button --- */
+.logout-btn {
+  padding:.4rem 1rem;
+  background:#ff5555;     /* accent colour stays bright */
+  color:#fff;
+  border-radius:var(--radius);
+  text-decoration:none;
+  font-size:.9rem;
+}
+.logout-btn:hover { background:#e04040; }
+
+/* --- Dark‑theme specific tweaks --- */
+.dark-theme .logout-btn { background:#c33; }
+
+/* floating toggle für Auth‑Seiten */
+.theme-floating {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1100;
+}
+
+
+/* Brand-Button styling */
+.btn-brand {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}

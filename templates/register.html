@@ -1,9 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- ---------- Theme‑Toggle oben rechts ---------- -->
+<button id="themeToggle"
+        class="theme-btn theme-floating"
+        aria-label="Design umschalten"
+        data-icon-light="{{ url_for('static', filename='img/theme.png') }}"
+        data-icon-dark="{{ url_for('static', filename='img/themedark.png') }}">
+  <img src="{{ url_for('static', filename='img/theme.png') }}" width="24" height="24" alt="">
+</button>
+
 <div class="auth-wrapper">
   <div class="auth-card">
 
-    {# ---------- Flash-Meldungen ---------- #}
+    {# ---------- Flash‑Meldungen ---------- #}
     {% with messages = get_flashed_messages(with_categories=True) %}
       {% if messages %}
         <div class="flash-box">
@@ -17,10 +27,10 @@
     <h2>Registrieren</h2>
 
     <form method="post" class="auth-form">
-      <input name="username" placeholder="Benutzername" required>
-      <input type="email" name="email" placeholder="E‑Mail" required>
-      <input type="password" name="password" placeholder="Passwort" required>
-      <input type="password" name="password_confirm" placeholder="Passwort wiederholen" required>
+      <input name="username"          placeholder="Benutzername" required>
+      <input type="email" name="email" placeholder="E‑Mail"       required>
+      <input type="password" name="password"          placeholder="Passwort" required>
+      <input type="password" name="password_confirm"  placeholder="Passwort wiederholen" required>
       <button type="submit">Account anlegen</button>
     </form>
 

@@ -1,122 +1,122 @@
-/* ---------- Auth (Login / Register) ---------- */
+/* ---------- Auth (Login / Register) ---------- */
 .auth-wrapper {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    height:100vh;                 /* volle Höhe, vertikal zentriert */
-    background:#fff;              /* gleiche Grundfarbe wie Chat‑Seite */
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--bg-page);
+  color: var(--text);
+}
 
-  .auth-card {
-    width:100%;
-    max-width:420px;              /* angenehm breit, aber nicht zu groß */
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    padding:2rem;
-    box-shadow:0 2px 12px rgba(0,0,0,.05);  /* sanfter Schatten */
-    display:flex;
-    flex-direction:column;
-    gap:1rem;
-  }
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-  /* Inputs und Button an Chat‑Stil anlehnen */
-  .auth-card input {
-    padding:.6rem .8rem;
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    width:100%;
-  }
+/* Inputs & Buttons */
+.auth-card input {
+  width: 100%;
+  padding: .6rem .8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-page);
+  color: var(--text);
+}
+.auth-card button {
+  padding: .6rem;
+  border: none;
+  border-radius: var(--radius);
+  background: #0078ff;
+  color: #fff;
+  cursor: pointer;
+}
 
-  .auth-card button {
-    padding:.6rem;
-    border:none;
-    border-radius:var(--radius);
-    background:#0078ff;
-    color:#fff;
-    cursor:pointer;
-  }
+/* Kleiner Text unterhalb der Form */
+.auth-alt {
+  text-align: center;
+  font-size: .9rem;
+}
 
-  .auth-alt {
-    text-align:center;
-    font-size:.9rem;
-  }
-
-  /* Abstand in der Form */
+/* Formular‑Abstände */
 .auth-form {
-  display:flex;
-  flex-direction:column;
-  gap:1rem;                      /* 1 rem Abstand zwischen den drei Elementen */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* Flash‑Container in der Card */
+/* Flash‑Container & Meldungen */
 .flash-box {
-  display:flex;
-  flex-direction:column;
-  gap:.5rem;
-  margin-bottom:1rem;            /* Abstand unter den Meldungen */
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-bottom: 1rem;
 }
-
-.flash {                         /* Grundstil */
-  padding:.6rem .8rem;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  font-size:.9rem;
+.flash {
+  padding: .6rem .8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: .9rem;
 }
+.flash.danger  { background: #ffe5e5; color: #b30000; }
+.flash.success { background: #e6ffe6; color: #006600; }
 
-/* Kategorieabhängige Farben – gern anpassen */
-.flash.danger  { background:#ffe5e5; color:#b30000; }
-.flash.success { background:#e6ffe6; color:#006600; }
+.dark-theme .flash.danger  { background: #5a0000; color: #ffb3b3; }
+.dark-theme .flash.success { background: #063906; color: #b6ffb6; }
 
-/* ---------- Modal‑Overlay ---------- */
+/* ---------- Modal‑Overlay & -Card ---------- */
 .modal-overlay {
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.35);
-  /* standardmäßig VERSTECKT */
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:1000;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
-/* Wenn die Klasse .show gesetzt ist → anzeigen */
-.modal-overlay.show {
-  display:flex;
-}
-/* ---------- Modal‑Card (gleicher Stil wie .auth-card) ---------- */
+.modal-overlay.show { display: flex; }
+
 .modal-card {
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  box-shadow:0 2px 12px rgba(0,0,0,.1);
-  width:100%;
-  max-width:420px;
-  padding:2rem;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .1);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* Formular‑Layout im Modal */
+/* Formular im Modal */
 .modal-card form {
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .modal-actions {
-  display:flex;
-  justify-content:flex-end;
-  gap:.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
 }
-
 .modal-actions .danger {
-  background:#ff5555;
-  color:#fff;
+  background: #ff5555;
+  color: #fff;
 }
+.dark-theme .modal-actions .danger { background: #c33; }
 
 .modal-actions button {
-  padding:.5rem 1rem;
-  border:none;
-  border-radius:var(--radius);
-  cursor:pointer;
+  padding: .5rem 1rem;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
 }
