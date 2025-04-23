@@ -8,15 +8,16 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
 
   {# ---------- globale Flash‑Meldungen ---------- #}
-  {% with messages = get_flashed_messages(with_categories=True) %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       <ul class="flash-list">
-        {% for cat, msg in messages %}
-          <li class="flash {{ cat }}">{{ msg }}</li>
+        {% for category, message in messages %}
+          <li class="flash {{ category }}">{{ message }}</li>
         {% endfor %}
       </ul>
     {% endif %}
@@ -41,5 +42,6 @@
   {# ---------- toolbar ---------- #}
   <script src="{{ url_for('static', filename='js/toolbar.js') }}"></script>
 
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

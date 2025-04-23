@@ -37,43 +37,47 @@ body {
 
 /* ---------- Navbar ---------- */
 .navbar {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:var(--pad);
-  border-bottom:1px solid var(--border);
-  font-weight:600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--pad);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  position: sticky;                  /* sticks to the viewport while scrolling */
+  top: 0;                            /* sticks to the top */
+  z-index: 101;                      /* higher than flash messages to stay on top */
+  background: var(--bg-page);        /* ensure background is visible */
 }
 
 /* --- Nav actions container --- */
 .navbar-actions {
-  display:flex;
-  align-items:center;
-  gap:1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 /* --- Theme toggle button --- */
 .theme-btn {
-  background:none;
-  border:none;
-  padding:0;
-  cursor:pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
-.theme-btn img { display:block; }
+.theme-btn img { display: block; }
 
 /* --- Logout button --- */
 .logout-btn {
-  padding:.4rem 1rem;
-  background:#ff5555;     /* accent colour stays bright */
-  color:#fff;
-  border-radius:var(--radius);
-  text-decoration:none;
-  font-size:.9rem;
+  padding: .4rem 1rem;
+  background: #ff5555;     /* accent colour stays bright */
+  color: #fff;
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-size: .9rem;
 }
-.logout-btn:hover { background:#e04040; }
+.logout-btn:hover { background: #e04040; }
 
 /* --- Dark‑theme specific tweaks --- */
-.dark-theme .logout-btn { background:#c33; }
+.dark-theme .logout-btn { background: #c33; }
 
 /* floating toggle für Auth‑Seiten */
 .theme-floating {
@@ -83,7 +87,6 @@ body {
   z-index: 1100;
 }
 
-
 /* Brand-Button styling */
 .btn-brand {
   background: none;
@@ -92,4 +95,43 @@ body {
   color: inherit;
   cursor: pointer;
   padding: 0;
+}
+
+/* Flash-Leiste: fixed position that follows scrolling */
+ul.flash-list {
+  list-style: none;
+  margin: 0 auto;                     /* zentrieren */
+  padding: 0;
+  width: min(100%, var(--width));     /* flexibel bis max-width */
+  position: sticky;                   /* sticks to the viewport while scrolling */
+  top: 0;                             /* sticks to the top */
+  z-index: 100;                       /* ensure it's above other content */
+}
+
+ul.flash-list li.flash {
+  box-sizing: border-box;             /* Padding in Breite einrechnen */
+  padding: .75rem 1rem;               /* Innenabstand */
+  text-align: center;                 /* Text zentrieren */
+  border: 1px solid var(--border);
+  background: var(--bg-card);         /* Same background as other cards */
+  color: var(--text);                 /* Match text color */
+}
+
+/* Danger and success flash messages */
+ul.flash-list li.flash.danger {
+  background: #ffe5e5;
+  color: #b30000;
+}
+ul.flash-list li.flash.success {
+  background: #e6ffe6;
+  color: #006600;
+}
+
+.dark-theme ul.flash-list li.flash.danger {
+  background: #5a0000;
+  color: #ffb3b3;
+}
+.dark-theme ul.flash-list li.flash.success {
+  background: #063906;
+  color: #b6ffb6;
 }

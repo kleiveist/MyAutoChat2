@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="utf-8">
-  <title>Chat Messenger</title>
+{% extends "base.html" %}
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/toolbar.css') }}">
-</head>
-<body>
+{% block title %}Chat Messenger{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/toolbar.css') }}">
+{% endblock %}
+
+{% block content %}
   <!-- Navbar mit Toolbar‑Toggle -->
   <nav class="navbar">
     <!-- Toolbar‑Toggle-Button -->
     <button id="toolbarToggle" class="navbar-brand btn-brand" aria-label="Toolbar umschalten">
-      Chat Messenger
+      Chat Messenger
     </button>
 
     <div class="navbar-actions">
@@ -45,20 +41,17 @@
     </div>
 
     <div class="message left">
-      <span>Sprech Deutsch …</span>
+      <span>Sprech Deutsch …</span>
       <span class="msg-date">10:01</span>
     </div>
   </main>
 
   <form class="fixed-form" id="chatForm" autocomplete="off">
-    <input type="text" name="message" placeholder="Gib deine Nachricht ein …" required>
+    <input type="text" name="message" placeholder="Gib deine Nachricht ein …" required>
     <button type="submit">Senden</button>
   </form>
+{% endblock %}
 
-  <!-- Skripte -->
-  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/toolbar.js') }}"></script>
-
-</body>
-</html>
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

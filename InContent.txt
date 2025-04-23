@@ -1,6 +1,7 @@
 📂 MyAutoChat
 ├── 📝 .gitignore
 ├── 📝 InContent.txt
+├── 📝 README.md
 ├── 🐍 app.py
 ├── 🐍 config.py
 ├── 📂 instance/
@@ -9,14 +10,16 @@
 │   ├── 📂 css/
 │   │   ├── 🎨 auth.css
 │   │   ├── 🎨 base.css
-│   │   └── 🎨 chat.css
+│   │   ├── 🎨 chat.css
+│   │   └── 🎨 toolbar.css
 │   ├── 📂 img/
 │   │   ├── 📄 theme.png
 │   │   └── 📄 themedark.png
 │   └── 📂 js/
 │       ├── 📜 auth.js
 │       ├── 📜 chat.js
-│       └── 📜 theme.js
+│       ├── 📜 theme.js
+│       └── 📜 toolbar.js
 └── 📂 templates/
     ├── 🌐 base.html
     ├── 🌐 index.html
@@ -31,6 +34,29 @@
 /instance/*.db
 __pycache__/*.py[cod]
 📝 --- InContent.txt ---
+
+📝 --- README.md ---
+A lightweight Flask‑based chat application with user authentication,
+built to serve as a foundation for an AI‑powered chat service.
+You can register, log in, send messages in real time,
+and—coming soon—plug in advanced AI chat engines and management tools.
+
+---
+
+## 🚀 Features
+
+- **User Authentication**  
+  Registration, login & logout powered by Flask‑Login and bcrypt.
+- **Simple Chat UI**  
+  Real‑time message bubbles, client‑side rendering via vanilla JS.
+- **SQLite Backend**  
+  Stores users (and later chat history) in a file‑based database.
+- **Modular Structure**  
+  Clearly separated config, models, views, static assets, and templates.
+- **Future‑Proofing**  
+  Designed to be extended with a pluggable AI chat engine and a management dashboard.
+
+---
 
 🐍 --- app.py ---
 import os
@@ -159,172 +185,185 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 🎨 --- static\css\auth.css ---
-/* ---------- Auth (Login / Register) ---------- */
+/* ---------- Auth (Login / Register) ---------- */
 .auth-wrapper {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    height:100vh;                 /* volle Höhe, vertikal zentriert */
-    background:#fff;              /* gleiche Grundfarbe wie Chat‑Seite */
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--bg-page);
+  color: var(--text);
+}
 
-  .auth-card {
-    width:100%;
-    max-width:420px;              /* angenehm breit, aber nicht zu groß */
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    padding:2rem;
-    box-shadow:0 2px 12px rgba(0,0,0,.05);  /* sanfter Schatten */
-    display:flex;
-    flex-direction:column;
-    gap:1rem;
-  }
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-  /* Inputs und Button an Chat‑Stil anlehnen */
-  .auth-card input {
-    padding:.6rem .8rem;
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    width:100%;
-  }
+/* Inputs & Buttons */
+.auth-card input {
+  width: 100%;
+  padding: .6rem .8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-page);
+  color: var(--text);
+}
+.auth-card button {
+  padding: .6rem;
+  border: none;
+  border-radius: var(--radius);
+  background: #0078ff;
+  color: #fff;
+  cursor: pointer;
+}
 
-  .auth-card button {
-    padding:.6rem;
-    border:none;
-    border-radius:var(--radius);
-    background:#0078ff;
-    color:#fff;
-    cursor:pointer;
-  }
+/* Kleiner Text unterhalb der Form */
+.auth-alt {
+  text-align: center;
+  font-size: .9rem;
+}
 
-  .auth-alt {
-    text-align:center;
-    font-size:.9rem;
-  }
-
-  /* Abstand in der Form */
+/* Formular‑Abstände */
 .auth-form {
-  display:flex;
-  flex-direction:column;
-  gap:1rem;                      /* 1 rem Abstand zwischen den drei Elementen */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* Flash‑Container in der Card */
+/* Flash‑Container & Meldungen */
 .flash-box {
-  display:flex;
-  flex-direction:column;
-  gap:.5rem;
-  margin-bottom:1rem;            /* Abstand unter den Meldungen */
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-bottom: 1rem;
 }
-
-.flash {                         /* Grundstil */
-  padding:.6rem .8rem;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  font-size:.9rem;
+.flash {
+  padding: .6rem .8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: .9rem;
 }
+.flash.danger  { background: #ffe5e5; color: #b30000; }
+.flash.success { background: #e6ffe6; color: #006600; }
 
-/* Kategorieabhängige Farben – gern anpassen */
-.flash.danger  { background:#ffe5e5; color:#b30000; }
-.flash.success { background:#e6ffe6; color:#006600; }
+.dark-theme .flash.danger  { background: #5a0000; color: #ffb3b3; }
+.dark-theme .flash.success { background: #063906; color: #b6ffb6; }
 
-/* ---------- Modal‑Overlay ---------- */
+/* ---------- Modal‑Overlay & -Card ---------- */
 .modal-overlay {
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.35);
-  /* standardmäßig VERSTECKT */
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:1000;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
-/* Wenn die Klasse .show gesetzt ist → anzeigen */
-.modal-overlay.show {
-  display:flex;
-}
-/* ---------- Modal‑Card (gleicher Stil wie .auth-card) ---------- */
+.modal-overlay.show { display: flex; }
+
 .modal-card {
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  box-shadow:0 2px 12px rgba(0,0,0,.1);
-  width:100%;
-  max-width:420px;
-  padding:2rem;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .1);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* Formular‑Layout im Modal */
+/* Formular im Modal */
 .modal-card form {
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .modal-actions {
-  display:flex;
-  justify-content:flex-end;
-  gap:.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
 }
-
 .modal-actions .danger {
-  background:#ff5555;
-  color:#fff;
+  background: #ff5555;
+  color: #fff;
 }
+.dark-theme .modal-actions .danger { background: #c33; }
 
 .modal-actions button {
-  padding:.5rem 1rem;
-  border:none;
-  border-radius:var(--radius);
-  cursor:pointer;
+  padding: .5rem 1rem;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
 }
 
 🎨 --- static\css\base.css ---
+/* static/css/base.css */
+
 :root {
-    --bg-left:  #f1f1f1;
-    --bg-right: #e6ffe6;
-    --border:   #dddddd;
-    --radius:   6px;
-    --pad:      1rem;
-    --width:    800px;
-    font-family: system-ui, sans-serif;
-  }
+  /* --------- Light Theme (Default) --------- */
+  --bg-page:  #ffffff;
+  --bg-left:  #f1f1f1;
+  --bg-right: #e6ffe6;
+  --bg-card:  #ffffff;
+  --border:   #dddddd;
+  --text:     #000000;
 
-  /* Reset */
-  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  --radius: 6px;
+  --pad:    1rem;
+  --width:  800px;
 
-  body { background:#fff; }
+  font-family: system-ui, sans-serif;
+}
 
-  .navbar {
-    padding:var(--pad);
-    border-bottom:1px solid var(--border);
-    font-weight:600;
-  }
+/* --------- Dark Theme Overrides --------- */
+.dark-theme {
+  --bg-page:  #1e1e1e;
+  --bg-left:  #2b2b2b;
+  --bg-right: #214021;
+  --bg-card:  #262626;
+  --border:   #444444;
+  --text:     #eeeeee;
+}
 
-  .navbar {
-    display:flex;                 /* links/rechts nebeneinander */
-    justify-content:space-between;
-    align-items:center;
-    padding:var(--pad);
-    border-bottom:1px solid var(--border);
-    font-weight:600;
-  }
+/* ---------- Reset ---------- */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 
-  .logout-btn {
-    padding:.4rem 1rem;
-    background:#ff5555;           /* roter Button */
-    color:#fff;
-    border-radius:var(--radius);
-    text-decoration:none;
-    font-size:.9rem;
-  }
+/* ---------- Global ---------- */
+body {
+  background: var(--bg-page);
+  color: var(--text);
+}
 
-  .logout-btn:hover { background:#e04040; }
+/* ---------- Navbar ---------- */
+.navbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:var(--pad);
+  border-bottom:1px solid var(--border);
+  font-weight:600;
+}
 
-/* Theme‑Button & Navbar‑Actions */
+/* --- Nav actions container --- */
+.navbar-actions {
+  display:flex;
+  align-items:center;
+  gap:1rem;
+}
+
+/* --- Theme toggle button --- */
 .theme-btn {
   background:none;
   border:none;
@@ -332,73 +371,173 @@ class Config:
   cursor:pointer;
 }
 .theme-btn img { display:block; }
-.navbar-actions { display:flex; align-items:center; gap:1rem; }
 
-/* ---------- Dark‑Theme‑Varianten (Beispiel) ---------- */
-.dark-theme {
-  --bg-left:  #2b2b2b;
-  --bg-right: #214021;
-  --border:   #444;
-  background: #1e1e1e;
-  color:      #eee;
+/* --- Logout button --- */
+.logout-btn {
+  padding:.4rem 1rem;
+  background:#ff5555;     /* accent colour stays bright */
+  color:#fff;
+  border-radius:var(--radius);
+  text-decoration:none;
+  font-size:.9rem;
 }
+.logout-btn:hover { background:#e04040; }
 
-.dark-theme .navbar  { border-color:#444; }
-.dark-theme .message { color:#eee; }
+/* --- Dark‑theme specific tweaks --- */
 .dark-theme .logout-btn { background:#c33; }
 
+/* floating toggle für Auth‑Seiten */
+.theme-floating {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1100;
+}
+
+
+/* Brand-Button styling */
+.btn-brand {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Flash-Leiste: flexibel bis max. Chat-Breite */
+ul.flash-list {
+  list-style: none;
+  margin: 0 auto;                     /* zentrieren */
+  padding: 0;
+  width: min(100%, var(--width));     /* flexibel bis max-width */
+}
+
+ul.flash-list li.flash {
+  box-sizing: border-box;             /* Padding in Breite einrechnen */
+  padding: .75rem 1rem;               /* Innenabstand */
+  text-align: center;                 /* Text zentrieren */
+  border: 1px solid var(--border);
+}
+
 🎨 --- static\css\chat.css ---
+/* static/css/chat.css */
+
+/* ---------- Chat ---------- */
 .chat-container {
-    max-width:var(--width);
-    margin:var(--pad) auto calc(3*var(--pad));
-    display:flex;
-    flex-direction:column;
-    gap:var(--pad);
+  max-width: var(--width);
+  margin: var(--pad) auto calc(3 * var(--pad));
+  display: flex;
+  flex-direction: column;
+  gap: var(--pad);
+}
+
+.message {
+  position: relative;
+  max-width: 75%;
+  padding: var(--pad);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  background: var(--bg-card);     /* allgemeiner Fallback */
+}
+
+.message.right { align-self: flex-end; background: var(--bg-right); }
+.message.left  { align-self: flex-start; background: var(--bg-left);  }
+
+/* Zeitstempel */
+.msg-date {
+  position: absolute;
+  right: .5rem;
+  bottom: .25rem;
+  font-size: .75rem;
+  color: rgba(0, 0, 0, .5);
+}
+.dark-theme .msg-date { color: rgba(255, 255, 255, .55); }
+
+/* Eingabebereich am Seiten­ende */
+.fixed-form {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: .5rem calc(50% - var(--width)/2);
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: .5rem;
+}
+.fixed-form input[type="text"] {
+  flex: 1;
+  padding: .5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-page);
+  color: var(--text);
+}
+.fixed-form button {
+  padding: .5rem 1rem;
+  border: none;
+  background: #0078ff;           /* Primärfarbe bleibt kräftig sichtbar */
+  color: #fff;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+🎨 --- static\css\toolbar.css ---
+/* -------------------------------------------------
+   Toolbar‑Styles (Sidebar links unterhalb der Navbar)
+   ------------------------------------------------- */
+
+/* ---------- Globale Variablen für die Sidebar ---------- */
+:root {
+    /* Breite der Sidebar */
+    --toolbar-width: 250px;
+
+    /* Spezielle Hintergründe, damit die Toolbar sich
+       sowohl im Hell‑ als auch im Dunkel‑Modus abhebt */
+    --bg-toolbar-light: #f7f7f7;   /* etwas dunkler als weiß */
+    --bg-toolbar-dark:  #262626;   /* etwas heller als #1e1e1e */
+
+    /* HÖHE der Navbar – muss zu deinem Layout passen! */
+    --navbar-height: 3.5rem;       /* ≈ 56 px */
   }
 
-  .message {
-    position:relative;
-    max-width:75%;
-    padding:var(--pad);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
+  /* ---------- Layout‑Logik ---------- */
+
+  /* Chat rückt nach rechts, wenn die Toolbar offen ist */
+  body.toolbar-open .chat-container {
+    margin-left: var(--toolbar-width);
   }
 
-  .message.right { align-self:flex-end; background:var(--bg-right); }
-  .message.left  { align-self:flex-start; background:var(--bg-left);  }
-
-  .msg-date {
-    position:absolute;
-    right:.5rem;
-    bottom:.25rem;
-    font-size:.75rem;
-    color:rgba(0,0,0,.5);
+  /* sanfte Animation für das Ein‑ / Ausblenden */
+  .chat-container {
+    transition: margin-left 0.3s ease;
   }
 
-  .fixed-form {
-    position:fixed;
-    bottom:0; left:0; right:0;
-    padding:.5rem calc(50% - var(--width)/2);
-    background:#fff;
-    border-top:1px solid var(--border);
-    display:flex;
-    gap:.5rem;
+  /* Grund­layout der Sidebar */
+  #toolbar {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    height: calc(100vh - var(--navbar-height));
+    width: var(--toolbar-width);
+
+    background: var(--bg-toolbar-light);
+    border-right: 1px solid var(--border);
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+
+    overflow-y: auto;
+    z-index: 1000;          /* über Inhalt, aber unter Navbar‑Toggle */
   }
 
-  .fixed-form input[type="text"]{
-    flex:1;
-    padding:.5rem;
-    border:1px solid var(--border);
-    border-radius:var(--radius);
+  /* Dunkelmodus‑Überschreibungen */
+  .dark-theme #toolbar {
+    background: var(--bg-toolbar-dark);
+    border-right-color: var(--border);
   }
 
-  .fixed-form button{
-    padding:.5rem 1rem;
-    border:none;
-    background:#0078ff;
-    color:#fff;
-    border-radius:var(--radius);
-    cursor:pointer;
+  /* Toolbar ausblenden */
+  #toolbar.hidden {
+    display: none;
   }
 
 📜 --- static\js\auth.js ---
@@ -496,16 +635,40 @@ document.addEventListener("DOMContentLoaded", () => {
 // static/js/theme.js
 document.addEventListener("DOMContentLoaded", () => {
     const btn  = document.getElementById("themeToggle");
+    const img  = btn.querySelector("img");
     const root = document.documentElement;
 
-    // gespeicherte Präferenz laden
-    if (localStorage.getItem("theme") === "dark") {
-      root.classList.add("dark-theme");
-    }
+    const setIcon = (dark) => {
+      img.src = dark ? btn.dataset.iconDark : btn.dataset.iconLight;
+    };
 
+    // gespeicherte Präferenz anwenden
+    const darkInitial = localStorage.getItem("theme") === "dark";
+    if (darkInitial) root.classList.add("dark-theme");
+    setIcon(darkInitial);
+
+    // Klick‑Handler
     btn.addEventListener("click", () => {
       const dark = root.classList.toggle("dark-theme");
       localStorage.setItem("theme", dark ? "dark" : "light");
+      setIcon(dark);
+    });
+  });
+
+📜 --- static\js\toolbar.js ---
+document.addEventListener("DOMContentLoaded", () => {
+    const toggle  = document.getElementById("toolbarToggle");
+    const toolbar = document.getElementById("toolbar");
+    const body    = document.body;
+
+    toggle.addEventListener("click", () => {
+      const isOpen = toolbar.classList.toggle("hidden");
+      // wenn hidden-klasse da ist → geschlossen, sonst offen
+      if (isOpen) {
+        body.classList.remove("toolbar-open");
+      } else {
+        body.classList.add("toolbar-open");
+      }
     });
   });
 
@@ -521,18 +684,12 @@ document.addEventListener("DOMContentLoaded", () => {
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 </head>
-
 <body>
+
   {# ---------- globale Flash‑Meldungen ---------- #}
-  {% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-      <ul class="flash-list">
-        {% for cat, msg in messages %}
-          <li class="flash {{ cat }}">{{ msg }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
+  <ul class="flash-list">
+    <li class="flash danger">Please log in to access this page.</li>
+  </ul>
 
   {# ---------- Seiteninhalt ---------- #}
   {% block content %}{% endblock %}
@@ -540,12 +697,19 @@ document.addEventListener("DOMContentLoaded", () => {
   {# ---------- Auth‑Skript nur für /login & /register ---------- #}
   {% if request.endpoint in ['login', 'register'] %}
     <script>
-      /* Flask‑URLs ans JS durchreichen */
+      // Flask‑URLs ans JS durchreichen (kein Redeclare mehr)
       const deleteUrl   = "{{ url_for('delete_account') }}";
       const redirectUrl = "{{ url_for('login') }}";
     </script>
     <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
   {% endif %}
+
+  {# ---------- Theme‑Switcher immer laden ---------- #}
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+
+  {# ---------- toolbar ---------- #}
+  <script src="{{ url_for('static', filename='js/toolbar.js') }}"></script>
+
 </body>
 </html>
 
@@ -556,27 +720,38 @@ document.addEventListener("DOMContentLoaded", () => {
   <meta charset="utf-8">
   <title>Chat Messenger</title>
 
-  <!-- Eigenes CSS -->
+  <!-- Styles -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/toolbar.css') }}">
 </head>
 <body>
 
-  <!-- ---------- EINZIGE Navbar ---------- -->
+  <!-- Navbar mit Toolbar‑Toggle -->
   <nav class="navbar">
-    <span class="navbar-brand">Chat Messenger</span>
+    <!-- Toolbar‑Toggle-Button -->
+    <button id="toolbarToggle" class="navbar-brand btn-brand" aria-label="Toolbar umschalten">
+      Chat Messenger
+    </button>
 
     <div class="navbar-actions">
       <!-- Theme‑Toggle -->
-      <button id="themeToggle" class="theme-btn" aria-label="Design umschalten">
+      <button id="themeToggle" class="theme-btn" aria-label="Design umschalten"
+              data-icon-light="{{ url_for('static', filename='img/theme.png') }}"
+              data-icon-dark="{{ url_for('static', filename='img/themedark.png') }}">
         <img src="{{ url_for('static', filename='img/theme.png') }}"
-             width="24" height="24" alt="Hell/Dunkel umschalten">
+             width="24" height="24" alt="">
       </button>
 
       <!-- Logout -->
       <a href="{{ url_for('logout') }}" class="logout-btn">Abmelden</a>
     </div>
   </nav>
+
+  <!-- Leere Toolbar, wird per JS ein-/ausgeblendet -->
+  <div id="toolbar" class="toolbar hidden">
+    <!-- Später füllen wir hier die Chat-Liste o.Ä. -->
+  </div>
 
   <!-- ---------- Chat‑Inhalt ---------- -->
   <main class="chat-container" id="chat">
@@ -596,29 +771,29 @@ document.addEventListener("DOMContentLoaded", () => {
     <button type="submit">Senden</button>
   </form>
 
-  <!-- ---------- Skripte ---------- -->
+  <!-- Skripte -->
   <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
   <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/toolbar.js') }}"></script>
+
 </body>
 </html>
 
 🌐 --- templates\login.html ---
 {% extends "base.html" %}
 {% block content %}
+
+<!-- ---------- Theme‑Toggle oben rechts ---------- -->
+<button id="themeToggle"
+        class="theme-btn theme-floating"
+        aria-label="Design umschalten"
+        data-icon-light="{{ url_for('static', filename='img/theme.png') }}"
+        data-icon-dark="{{ url_for('static', filename='img/themedark.png') }}">
+  <img src="{{ url_for('static', filename='img/theme.png') }}" width="24" height="24" alt="">
+</button>
+
 <div class="auth-wrapper">
   <div class="auth-card">
-
-    {# ---------- Flash‑Meldungen INSIDE der Card ---------- #}
-    {% with messages = get_flashed_messages(with_categories=True) %}
-      {% if messages %}
-        <div class="flash-box">
-          {% for cat,msg in messages %}
-            <div class="flash {{cat}}">{{ msg }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-
     <h2>Anmelden</h2>
 
     <form method="post" class="auth-form">
@@ -635,17 +810,17 @@ document.addEventListener("DOMContentLoaded", () => {
       <a href="#" id="openDeleteModal">Konto löschen</a>
     </p>
 
-    {# ---------- Lösch‑Modal (zunächst unsichtbar) ---------- #}
+    {# ---------- Lösch‑Modal ---------- #}
     <div class="modal-overlay" id="deleteModal" hidden>
       <div class="modal-card">
         <h3>Konto wirklich löschen?</h3>
         <p>Bitte Benutzernamen <strong>zweimal</strong> eintippen und Passwort bestätigen.</p>
 
         <form id="deleteForm">
-          <input name="username"  placeholder="Benutzername" required>
+          <input name="username"         placeholder="Benutzername" required>
           <input name="username_confirm" placeholder="Benutzername (wiederholen)" required>
-          <input type="password" name="password" placeholder="Passwort" required>
-          <input type="password" name="password_confirm" placeholder="Passwort wiederholen" required>
+          <input type="password" name="password"          placeholder="Passwort" required>
+          <input type="password" name="password_confirm"  placeholder="Passwort wiederholen" required>
           <div class="modal-actions">
             <button type="button" id="cancelDelete">Abbrechen</button>
             <button type="submit"  class="danger">Löschen</button>
@@ -657,31 +832,28 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
 {% endblock %}
 
-
 🌐 --- templates\register.html ---
 {% extends "base.html" %}
 {% block content %}
+
+<!-- ---------- Theme‑Toggle oben rechts ---------- -->
+<button id="themeToggle"
+        class="theme-btn theme-floating"
+        aria-label="Design umschalten"
+        data-icon-light="{{ url_for('static', filename='img/theme.png') }}"
+        data-icon-dark="{{ url_for('static', filename='img/themedark.png') }}">
+  <img src="{{ url_for('static', filename='img/theme.png') }}" width="24" height="24" alt="">
+</button>
+
 <div class="auth-wrapper">
   <div class="auth-card">
-
-    {# ---------- Flash-Meldungen ---------- #}
-    {% with messages = get_flashed_messages(with_categories=True) %}
-      {% if messages %}
-        <div class="flash-box">
-          {% for cat, msg in messages %}
-            <div class="flash {{ cat }}">{{ msg }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-
     <h2>Registrieren</h2>
 
     <form method="post" class="auth-form">
-      <input name="username" placeholder="Benutzername" required>
-      <input type="email" name="email" placeholder="E‑Mail" required>
-      <input type="password" name="password" placeholder="Passwort" required>
-      <input type="password" name="password_confirm" placeholder="Passwort wiederholen" required>
+      <input name="username"          placeholder="Benutzername" required>
+      <input type="email" name="email" placeholder="E‑Mail"       required>
+      <input type="password" name="password"          placeholder="Passwort" required>
+      <input type="password" name="password_confirm"  placeholder="Passwort wiederholen" required>
       <button type="submit">Account anlegen</button>
     </form>
 

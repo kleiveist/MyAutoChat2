@@ -12,18 +12,6 @@
 
 <div class="auth-wrapper">
   <div class="auth-card">
-
-    {# ---------- Flash‑Meldungen ---------- #}
-    {% with messages = get_flashed_messages(with_categories=True) %}
-      {% if messages %}
-        <div class="flash-box">
-          {% for cat, msg in messages %}
-            <div class="flash {{ cat }}">{{ msg }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-
     <h2>Anmelden</h2>
 
     <form method="post" class="auth-form">
