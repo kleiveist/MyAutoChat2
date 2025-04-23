@@ -2,12 +2,24 @@
 
 /* ---------- Chat ---------- */
 .chat-container {
-  max-width: var(--width);
-  margin: var(--pad) auto calc(4 * var(--pad));
+  /* sitzt fest zwischen Kopf- und Fußleiste */
+  position: fixed;
+  top:    var(--navbar-height);
+  bottom: var(--input-form-height);
+  left:   0;                 /* → ganze Fensterbreite                */
+  right:  0;
+
+  width: 100%;               /* → Scroll-Leiste immer ganz rechts    */
+  max-width: var(--width);   /* inhaltlich weiterhin 800 px Limit     */
+  margin: 0 auto;            /* zentriert den Chat in der Breite      */
+
+  padding: var(--pad);
   display: flex;
   flex-direction: column;
   gap: var(--pad);
-  padding-bottom: 3rem; /* Extra space for the fixed-form */
+
+  overflow-y: auto;          /* einzig scrollbarer Bereich            */
+  overscroll-behavior: contain;
 }
 
 .message {
@@ -75,3 +87,4 @@ body.toolbar-open .fixed-form {
 .dark-theme .fixed-form {
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
 }
+

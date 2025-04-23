@@ -7,20 +7,33 @@
 {% endblock %}
 
 {% block content %}
-  <!-- Navbar mit Toolbar‑Toggle -->
+  <!-- Navbar mit Chat-Titel und Icons -->
   <nav class="navbar">
-    <!-- Toolbar‑Toggle-Button -->
-    <button id="toolbarToggle" class="navbar-brand btn-brand" aria-label="Toolbar umschalten">
-      Chat Messenger
-    </button>
+    <div class="navbar-brand">
+      <!-- Horizontales Panel Button (tool01) -->
+      <button id="horizontalPanelBtn" class="toolbar-btn" aria-label="Horizontales Panel umschalten"
+              data-icon-light="{{ url_for('static', filename='img/tool01.png') }}"
+              data-icon-dark="{{ url_for('static', filename='img/tooldark01.png') }}">
+        <img src="{{ url_for('static', filename='img/tool01.png') }}" width="24" height="24" alt="">
+      </button>
+
+      <!-- Linke Toolbar Button (tool02) -->
+      <button id="leftToolbarBtn" class="toolbar-btn" aria-label="Linke Toolbar umschalten"
+              data-icon-light="{{ url_for('static', filename='img/tool02.png') }}"
+              data-icon-dark="{{ url_for('static', filename='img/tooldark02.png') }}">
+        <img src="{{ url_for('static', filename='img/tool02.png') }}" width="24" height="24" alt="">
+      </button>
+
+      <!-- Chat Titel -->
+      <span class="btn-brand">Chat Messenger</span>
+    </div>
 
     <div class="navbar-actions">
       <!-- Theme‑Toggle -->
       <button id="themeToggle" class="theme-btn" aria-label="Design umschalten"
               data-icon-light="{{ url_for('static', filename='img/theme.png') }}"
               data-icon-dark="{{ url_for('static', filename='img/themedark.png') }}">
-        <img src="{{ url_for('static', filename='img/theme.png') }}"
-             width="24" height="24" alt="">
+        <img src="{{ url_for('static', filename='img/theme.png') }}" width="24" height="24" alt="">
       </button>
 
       <!-- Logout -->
@@ -28,9 +41,17 @@
     </div>
   </nav>
 
-  <!-- Leere Toolbar, wird per JS ein-/ausgeblendet -->
-  <div id="toolbar" class="toolbar hidden">
-    <!-- Später füllen wir hier die Chat-Liste o.Ä. -->
+  <!-- Horizontales Panel (erscheint unter der Navbar) - jetzt leer -->
+  <div id="horizontal-panel">
+    <!-- Leer für zukünftige Inhalte -->
+  </div>
+
+  <!-- Linke Toolbar -->
+  <div id="left-toolbar">
+    <div class="toolbar-content">
+      <h3 class="toolbar-title">Linke Toolbar</h3>
+      <p>Platzhalter für zukünftige Funktionen. Diese Toolbar öffnet sich von links.</p>
+    </div>
   </div>
 
   <!-- ---------- Chat‑Inhalt ---------- -->

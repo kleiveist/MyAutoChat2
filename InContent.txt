@@ -1,6 +1,7 @@
 📂 MyAutoChat
 ├── 📝 .gitignore
 ├── 📝 InContent.txt
+├── 📄 Projektübersicht.pdf
 ├── 📝 README.md
 ├── 🐍 app.py
 ├── 🐍 config.py
@@ -14,7 +15,11 @@
 │   │   └── 🎨 toolbar.css
 │   ├── 📂 img/
 │   │   ├── 📄 theme.png
-│   │   └── 📄 themedark.png
+│   │   ├── 📄 themedark.png
+│   │   ├── 📄 tool01.png
+│   │   ├── 📄 tool02.png
+│   │   ├── 📄 tooldark01.png
+│   │   └── 📄 tooldark02.png
 │   └── 📂 js/
 │       ├── 📜 auth.js
 │       ├── 📜 chat.js
@@ -348,43 +353,47 @@ body {
 
 /* ---------- Navbar ---------- */
 .navbar {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:var(--pad);
-  border-bottom:1px solid var(--border);
-  font-weight:600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--pad);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  position: sticky;                  /* sticks to the viewport while scrolling */
+  top: 0;                            /* sticks to the top */
+  z-index: 101;                      /* higher than flash messages to stay on top */
+  background: var(--bg-page);        /* ensure background is visible */
 }
 
 /* --- Nav actions container --- */
 .navbar-actions {
-  display:flex;
-  align-items:center;
-  gap:1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 /* --- Theme toggle button --- */
 .theme-btn {
-  background:none;
-  border:none;
-  padding:0;
-  cursor:pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
-.theme-btn img { display:block; }
+.theme-btn img { display: block; }
 
 /* --- Logout button --- */
 .logout-btn {
-  padding:.4rem 1rem;
-  background:#ff5555;     /* accent colour stays bright */
-  color:#fff;
-  border-radius:var(--radius);
-  text-decoration:none;
-  font-size:.9rem;
+  padding: .4rem 1rem;
+  background: #ff5555;     /* accent colour stays bright */
+  color: #fff;
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-size: .9rem;
 }
-.logout-btn:hover { background:#e04040; }
+.logout-btn:hover { background: #e04040; }
 
 /* --- Dark‑theme specific tweaks --- */
-.dark-theme .logout-btn { background:#c33; }
+.dark-theme .logout-btn { background: #c33; }
 
 /* floating toggle für Auth‑Seiten */
 .theme-floating {
@@ -393,7 +402,6 @@ body {
   right: 1rem;
   z-index: 1100;
 }
-
 
 /* Brand-Button styling */
 .btn-brand {
@@ -405,12 +413,15 @@ body {
   padding: 0;
 }
 
-/* Flash-Leiste: flexibel bis max. Chat-Breite */
+/* Flash-Leiste: fixed position that follows scrolling */
 ul.flash-list {
   list-style: none;
   margin: 0 auto;                     /* zentrieren */
   padding: 0;
   width: min(100%, var(--width));     /* flexibel bis max-width */
+  position: sticky;                   /* sticks to the viewport while scrolling */
+  top: 0;                             /* sticks to the top */
+  z-index: 100;                       /* ensure it's above other content */
 }
 
 ul.flash-list li.flash {
@@ -418,6 +429,27 @@ ul.flash-list li.flash {
   padding: .75rem 1rem;               /* Innenabstand */
   text-align: center;                 /* Text zentrieren */
   border: 1px solid var(--border);
+  background: var(--bg-card);         /* Same background as other cards */
+  color: var(--text);                 /* Match text color */
+}
+
+/* Danger and success flash messages */
+ul.flash-list li.flash.danger {
+  background: #ffe5e5;
+  color: #b30000;
+}
+ul.flash-list li.flash.success {
+  background: #e6ffe6;
+  color: #006600;
+}
+
+.dark-theme ul.flash-list li.flash.danger {
+  background: #5a0000;
+  color: #ffb3b3;
+}
+.dark-theme ul.flash-list li.flash.success {
+  background: #063906;
+  color: #b6ffb6;
 }
 
 🎨 --- static\css\chat.css ---
@@ -426,10 +458,11 @@ ul.flash-list li.flash {
 /* ---------- Chat ---------- */
 .chat-container {
   max-width: var(--width);
-  margin: var(--pad) auto calc(3 * var(--pad));
+  margin: var(--pad) auto calc(4 * var(--pad));
   display: flex;
   flex-direction: column;
   gap: var(--pad);
+  padding-bottom: 3rem; /* Extra space for the fixed-form */
 }
 
 .message {
@@ -455,7 +488,7 @@ ul.flash-list li.flash {
 }
 .dark-theme .msg-date { color: rgba(255, 255, 255, .55); }
 
-/* Eingabebereich am Seiten­ende */
+/* Eingabebereich am Seiten­ende - Updated */
 .fixed-form {
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -464,7 +497,11 @@ ul.flash-list li.flash {
   border-top: 1px solid var(--border);
   display: flex;
   gap: .5rem;
+  max-width: 100%;
+  z-index: 100; /* Ensure it stays on top of content */
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Subtle shadow for visual separation */
 }
+
 .fixed-form input[type="text"] {
   flex: 1;
   padding: .5rem;
@@ -473,6 +510,7 @@ ul.flash-list li.flash {
   background: var(--bg-page);
   color: var(--text);
 }
+
 .fixed-form button {
   padding: .5rem 1rem;
   border: none;
@@ -482,63 +520,160 @@ ul.flash-list li.flash {
   cursor: pointer;
 }
 
+/* Make sure toolbar adjustments don't break our layout */
+body.toolbar-open .fixed-form {
+  padding-left: calc(var(--toolbar-width) + (50% - var(--width)/2));
+  transition: padding-left 0.3s ease;
+}
+
+/* Dark theme adjustment for the box shadow */
+.dark-theme .fixed-form {
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+}
+
 🎨 --- static\css\toolbar.css ---
 /* -------------------------------------------------
-   Toolbar‑Styles (Sidebar links unterhalb der Navbar)
+   Toolbar‑Styles (Linke Sidebar und horizontales Panel)
    ------------------------------------------------- */
 
-/* ---------- Globale Variablen für die Sidebar ---------- */
+/* ---------- Globale Variablen für die Toolbars ---------- */
 :root {
-    /* Breite der Sidebar */
-    --toolbar-width: 250px;
+  /* Dimensionen der Toolbars */
+  --left-toolbar-width: 250px;
+  --navbar-height: 52px;         /* Exakt 52px wie gefordert */
+  --horizontal-panel-height: 52px; /* Exakt gleiche Höhe wie Navbar */
+  --input-form-height: 56px;     /* Höhe des Eingabebereichs */
 
-    /* Spezielle Hintergründe, damit die Toolbar sich
-       sowohl im Hell‑ als auch im Dunkel‑Modus abhebt */
-    --bg-toolbar-light: #f7f7f7;   /* etwas dunkler als weiß */
-    --bg-toolbar-dark:  #262626;   /* etwas heller als #1e1e1e */
+  /* Spezielle Hintergründe für die Toolbars */
+  --bg-toolbar-light: #f7f7f7;   /* etwas dunkler als weiß */
+  --bg-toolbar-dark:  #262626;   /* etwas heller als #1e1e1e */
+}
 
-    /* HÖHE der Navbar – muss zu deinem Layout passen! */
-    --navbar-height: 3.5rem;       /* ≈ 56 px */
-  }
+/* ---------- Layout‑Logik für die Toolbars ---------- */
+/* Chat-Container Anpassungen bei offener linker Toolbar */
+body.left-toolbar-open .chat-container {
+  margin-left: var(--left-toolbar-width);
+  transition: margin-left 0.3s ease;
+}
 
-  /* ---------- Layout‑Logik ---------- */
+/* Anpassung bei offenem horizontalen Panel */
+body.horizontal-panel-open .chat-container {
+  margin-top: var(--horizontal-panel-height);
+  transition: margin-top 0.3s ease;
+}
 
-  /* Chat rückt nach rechts, wenn die Toolbar offen ist */
-  body.toolbar-open .chat-container {
-    margin-left: var(--toolbar-width);
-  }
+/* Grundlegende Toolbar-Button Styles */
+.toolbar-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  margin-right: 0.5rem;
+}
 
-  /* sanfte Animation für das Ein‑ / Ausblenden */
-  .chat-container {
-    transition: margin-left 0.3s ease;
-  }
+.toolbar-btn img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
 
-  /* Grund­layout der Sidebar */
-  #toolbar {
-    position: fixed;
-    top: var(--navbar-height);
-    left: 0;
-    height: calc(100vh - var(--navbar-height));
-    width: var(--toolbar-width);
+/* ---------- Horizontales Panel ---------- */
+/* Grund­layout des horizontalen Panels */
+#horizontal-panel {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  right: 0;
+  height: var(--horizontal-panel-height);
+  background: var(--bg-toolbar-light);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  z-index: 990;
+  transition: transform 0.3s ease;
+  transform: translateY(-100%); /* Versteckt oberhalb der Navbar */
+}
 
-    background: var(--bg-toolbar-light);
-    border-right: 1px solid var(--border);
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+/* Sichtbarmachen des horizontalen Panels */
+#horizontal-panel.visible {
+  transform: translateY(0);
+}
 
-    overflow-y: auto;
-    z-index: 1000;          /* über Inhalt, aber unter Navbar‑Toggle */
-  }
+/* ---------- Linke Toolbar ---------- */
+/* Grund­layout der linken Sidebar - jetzt mit Berücksichtigung des Eingabebereichs */
+#left-toolbar {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  bottom: var(--input-form-height); /* Stoppt oberhalb des Eingabebereichs */
+  width: var(--left-toolbar-width);
+  background: var(--bg-toolbar-light);
+  border-right: 1px solid var(--border);
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+  z-index: 990;
+  transition: transform 0.3s ease;
+  transform: translateX(-100%);
+}
 
-  /* Dunkelmodus‑Überschreibungen */
-  .dark-theme #toolbar {
-    background: var(--bg-toolbar-dark);
-    border-right-color: var(--border);
-  }
+/* Sichtbarmachen der linken Toolbar */
+#left-toolbar.visible {
+  transform: translateX(0);
+}
 
-  /* Toolbar ausblenden */
-  #toolbar.hidden {
-    display: none;
-  }
+/* ---------- Anpassungen für geöffnetes horizontales Panel ---------- */
+body.horizontal-panel-open #left-toolbar {
+  top: calc(var(--navbar-height) + var(--horizontal-panel-height));
+}
+
+/* ---------- Dunkelmodus-Überschreibungen ---------- */
+.dark-theme #left-toolbar,
+.dark-theme #horizontal-panel {
+  background: var(--bg-toolbar-dark);
+  border-color: var(--border);
+}
+
+/* ---------- Anpassungen für die fixed-form ---------- */
+/* Eingabeformular am unteren Rand fixiert */
+.fixed-form {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--input-form-height);
+  padding: .5rem calc(50% - var(--width)/2);
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  max-width: 100%;
+  z-index: 1000; /* Höherer z-index als die Toolbar */
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Anpassung für geöffnete linke Toolbar */
+body.left-toolbar-open .fixed-form {
+  padding-left: calc(var(--left-toolbar-width) + (50% - var(--width)/2));
+  transition: padding-left 0.3s ease;
+}
+
+/* Navbar Brand Bereich - für die Icons und Text */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+/* Sicherstellen, dass die Navbar richtig dargestellt wird */
+.navbar {
+  height: var(--navbar-height);
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
+}
 
 📜 --- static\js\auth.js ---
 // static/js/auth.js
@@ -656,21 +791,73 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 📜 --- static\js\toolbar.js ---
+// static/js/toolbar.js
 document.addEventListener("DOMContentLoaded", () => {
-    const toggle  = document.getElementById("toolbarToggle");
-    const toolbar = document.getElementById("toolbar");
-    const body    = document.body;
+  // Button-Elemente
+  const horizontalPanelBtn = document.getElementById("horizontalPanelBtn");
+  const leftToolbarBtn = document.getElementById("leftToolbarBtn");
 
-    toggle.addEventListener("click", () => {
-      const isOpen = toolbar.classList.toggle("hidden");
-      // wenn hidden-klasse da ist → geschlossen, sonst offen
-      if (isOpen) {
-        body.classList.remove("toolbar-open");
-      } else {
-        body.classList.add("toolbar-open");
-      }
-    });
+  // Toolbar-Elemente
+  const horizontalPanel = document.getElementById("horizontal-panel");
+  const leftToolbar = document.getElementById("left-toolbar");
+
+  // Body für Klassen
+  const body = document.body;
+
+  // Hilfsfunktion zum Umschalten eines Elements
+  function toggleElement(element, btnEl, bodyClass) {
+    element.classList.toggle("visible");
+    const isVisible = element.classList.contains("visible");
+
+    if (isVisible) {
+      body.classList.add(bodyClass);
+    } else {
+      body.classList.remove(bodyClass);
+    }
+  }
+
+  // Horizontales Panel umschalten
+  horizontalPanelBtn.addEventListener("click", () => {
+    toggleElement(horizontalPanel, horizontalPanelBtn, "horizontal-panel-open");
   });
+
+  // Linke Toolbar umschalten
+  leftToolbarBtn.addEventListener("click", () => {
+    toggleElement(leftToolbar, leftToolbarBtn, "left-toolbar-open");
+  });
+
+  // Dark Mode Status für Icon-Wechsel
+  const themeBtn = document.getElementById("themeToggle");
+  if (themeBtn) {
+    themeBtn.addEventListener("click", updateToolbarIcons);
+  }
+
+  // Initial Icons basierend auf Theme setzen
+  updateToolbarIcons();
+
+  // Funktion zum Aktualisieren der Toolbar-Icons basierend auf dem aktuellen Theme
+  function updateToolbarIcons() {
+    const isDarkMode = document.documentElement.classList.contains("dark-theme");
+
+    // Horizontales Panel Button Icon aktualisieren
+    if (horizontalPanelBtn) {
+      const horizontalIcon = horizontalPanelBtn.querySelector("img");
+      horizontalIcon.src = isDarkMode
+        ? horizontalPanelBtn.dataset.iconDark
+        : horizontalPanelBtn.dataset.iconLight;
+    }
+
+    // Linke Toolbar Button Icon aktualisieren
+    if (leftToolbarBtn) {
+      const leftIcon = leftToolbarBtn.querySelector("img");
+      if (leftIcon) {
+        leftIcon.src = isDarkMode
+          ? leftToolbarBtn.dataset.iconDark
+          : leftToolbarBtn.dataset.iconLight;
+      }
+    }
+  }
+});
 
 🌐 --- templates\base.html ---
 <!DOCTYPE html>
@@ -683,13 +870,20 @@ document.addEventListener("DOMContentLoaded", () => {
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
 
   {# ---------- globale Flash‑Meldungen ---------- #}
-  <ul class="flash-list">
-    <li class="flash danger">Please log in to access this page.</li>
-  </ul>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flash-list">
+        {% for category, message in messages %}
+          <li class="flash {{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
 
   {# ---------- Seiteninhalt ---------- #}
   {% block content %}{% endblock %}
@@ -710,37 +904,47 @@ document.addEventListener("DOMContentLoaded", () => {
   {# ---------- toolbar ---------- #}
   <script src="{{ url_for('static', filename='js/toolbar.js') }}"></script>
 
+  {% block extra_js %}{% endblock %}
 </body>
 </html>
 
 🌐 --- templates\index.html ---
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="utf-8">
-  <title>Chat Messenger</title>
+{% extends "base.html" %}
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/toolbar.css') }}">
-</head>
-<body>
+{% block title %}Chat Messenger{% endblock %}
 
-  <!-- Navbar mit Toolbar‑Toggle -->
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/toolbar.css') }}">
+{% endblock %}
+
+{% block content %}
+  <!-- Navbar mit Chat-Titel und Icons -->
   <nav class="navbar">
-    <!-- Toolbar‑Toggle-Button -->
-    <button id="toolbarToggle" class="navbar-brand btn-brand" aria-label="Toolbar umschalten">
-      Chat Messenger
-    </button>
+    <div class="navbar-brand">
+      <!-- Horizontales Panel Button (tool01) -->
+      <button id="horizontalPanelBtn" class="toolbar-btn" aria-label="Horizontales Panel umschalten"
+              data-icon-light="{{ url_for('static', filename='img/tool01.png') }}"
+              data-icon-dark="{{ url_for('static', filename='img/tooldark01.png') }}">
+        <img src="{{ url_for('static', filename='img/tool01.png') }}" width="24" height="24" alt="">
+      </button>
+
+      <!-- Linke Toolbar Button (tool02) -->
+      <button id="leftToolbarBtn" class="toolbar-btn" aria-label="Linke Toolbar umschalten"
+              data-icon-light="{{ url_for('static', filename='img/tool02.png') }}"
+              data-icon-dark="{{ url_for('static', filename='img/tooldark02.png') }}">
+        <img src="{{ url_for('static', filename='img/tool02.png') }}" width="24" height="24" alt="">
+      </button>
+
+      <!-- Chat Titel -->
+      <span class="btn-brand">Chat Messenger</span>
+    </div>
 
     <div class="navbar-actions">
       <!-- Theme‑Toggle -->
       <button id="themeToggle" class="theme-btn" aria-label="Design umschalten"
               data-icon-light="{{ url_for('static', filename='img/theme.png') }}"
               data-icon-dark="{{ url_for('static', filename='img/themedark.png') }}">
-        <img src="{{ url_for('static', filename='img/theme.png') }}"
-             width="24" height="24" alt="">
+        <img src="{{ url_for('static', filename='img/theme.png') }}" width="24" height="24" alt="">
       </button>
 
       <!-- Logout -->
@@ -748,9 +952,17 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
   </nav>
 
-  <!-- Leere Toolbar, wird per JS ein-/ausgeblendet -->
-  <div id="toolbar" class="toolbar hidden">
-    <!-- Später füllen wir hier die Chat-Liste o.Ä. -->
+  <!-- Horizontales Panel (erscheint unter der Navbar) - jetzt leer -->
+  <div id="horizontal-panel">
+    <!-- Leer für zukünftige Inhalte -->
+  </div>
+
+  <!-- Linke Toolbar -->
+  <div id="left-toolbar">
+    <div class="toolbar-content">
+      <h3 class="toolbar-title">Linke Toolbar</h3>
+      <p>Platzhalter für zukünftige Funktionen. Diese Toolbar öffnet sich von links.</p>
+    </div>
   </div>
 
   <!-- ---------- Chat‑Inhalt ---------- -->
@@ -761,23 +973,20 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
 
     <div class="message left">
-      <span>Sprech Deutsch …</span>
+      <span>Sprech Deutsch …</span>
       <span class="msg-date">10:01</span>
     </div>
   </main>
 
   <form class="fixed-form" id="chatForm" autocomplete="off">
-    <input type="text" name="message" placeholder="Gib deine Nachricht ein …" required>
+    <input type="text" name="message" placeholder="Gib deine Nachricht ein …" required>
     <button type="submit">Senden</button>
   </form>
+{% endblock %}
 
-  <!-- Skripte -->
-  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/toolbar.js') }}"></script>
-
-</body>
-</html>
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
 
 🌐 --- templates\login.html ---
 {% extends "base.html" %}

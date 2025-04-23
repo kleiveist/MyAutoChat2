@@ -1,6 +1,7 @@
 📂 MyAutoChat
 ├── 📝 .gitignore
 ├── 📝 InContent.txt
+├── 📄 Projektübersicht.pdf
 ├── 📝 README.md
 ├── 🐍 app.py
 ├── 🐍 config.py
@@ -14,7 +15,11 @@
 │   │   └── 🎨 toolbar.css
 │   ├── 📂 img/
 │   │   ├── 📄 theme.png
-│   │   └── 📄 themedark.png
+│   │   ├── 📄 themedark.png
+│   │   ├── 📄 tool01.png
+│   │   ├── 📄 tool02.png
+│   │   ├── 📄 tooldark01.png
+│   │   └── 📄 tooldark02.png
 │   └── 📂 js/
 │       ├── 📜 auth.js
 │       ├── 📜 chat.js

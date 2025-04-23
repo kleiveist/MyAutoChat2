@@ -1,56 +1,142 @@
 /* -------------------------------------------------
-   Toolbar‑Styles (Sidebar links unterhalb der Navbar)
+   Toolbar‑Styles (Linke Sidebar und horizontales Panel)
    ------------------------------------------------- */
 
-/* ---------- Globale Variablen für die Sidebar ---------- */
+/* ---------- Globale Variablen für die Toolbars ---------- */
 :root {
-    /* Breite der Sidebar */
-    --toolbar-width: 250px;
+  /* Dimensionen der Toolbars */
+  --left-toolbar-width: 250px;
+  --navbar-height: 52px;         /* Exakt 52px wie gefordert */
+  --horizontal-panel-height: 52px; /* Exakt gleiche Höhe wie Navbar */
+  --input-form-height: 56px;     /* Höhe des Eingabebereichs */
 
-    /* Spezielle Hintergründe, damit die Toolbar sich
-       sowohl im Hell‑ als auch im Dunkel‑Modus abhebt */
-    --bg-toolbar-light: #f7f7f7;   /* etwas dunkler als weiß */
-    --bg-toolbar-dark:  #262626;   /* etwas heller als #1e1e1e */
+  /* Spezielle Hintergründe für die Toolbars */
+  --bg-toolbar-light: #f7f7f7;   /* etwas dunkler als weiß */
+  --bg-toolbar-dark:  #262626;   /* etwas heller als #1e1e1e */
+}
 
-    /* HÖHE der Navbar – muss zu deinem Layout passen! */
-    --navbar-height: 3.5rem;       /* ≈ 56 px */
-  }
+/* ---------- Layout‑Logik für die Toolbars ---------- */
+/* Chat-Container Anpassungen bei offener linker Toolbar */
+body.left-toolbar-open .chat-container {
+  margin-left: var(--left-toolbar-width);
+  transition: margin-left 0.3s ease;
+}
 
-  /* ---------- Layout‑Logik ---------- */
+/* Anpassung bei offenem horizontalen Panel */
+body.horizontal-panel-open .chat-container {
+  margin-top: var(--horizontal-panel-height);
+  transition: margin-top 0.3s ease;
+}
 
-  /* Chat rückt nach rechts, wenn die Toolbar offen ist */
-  body.toolbar-open .chat-container {
-    margin-left: var(--toolbar-width);
-  }
+/* Grundlegende Toolbar-Button Styles */
+.toolbar-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  margin-right: 0.5rem;
+}
 
-  /* sanfte Animation für das Ein‑ / Ausblenden */
-  .chat-container {
-    transition: margin-left 0.3s ease;
-  }
+.toolbar-btn img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
 
-  /* Grund­layout der Sidebar */
-  #toolbar {
-    position: fixed;
-    top: var(--navbar-height);
-    left: 0;
-    height: calc(100vh - var(--navbar-height));
-    width: var(--toolbar-width);
+/* ---------- Horizontales Panel ---------- */
+/* Grund­layout des horizontalen Panels */
+#horizontal-panel {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  right: 0;
+  height: var(--horizontal-panel-height);
+  background: var(--bg-toolbar-light);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  z-index: 990;
+  transition: transform 0.3s ease;
+  transform: translateY(-100%); /* Versteckt oberhalb der Navbar */
+}
 
-    background: var(--bg-toolbar-light);
-    border-right: 1px solid var(--border);
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+/* Sichtbarmachen des horizontalen Panels */
+#horizontal-panel.visible {
+  transform: translateY(0);
+}
 
-    overflow-y: auto;
-    z-index: 1000;          /* über Inhalt, aber unter Navbar‑Toggle */
-  }
+/* ---------- Linke Toolbar ---------- */
+/* Grund­layout der linken Sidebar - jetzt mit Berücksichtigung des Eingabebereichs */
+#left-toolbar {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  bottom: var(--input-form-height); /* Stoppt oberhalb des Eingabebereichs */
+  width: var(--left-toolbar-width);
+  background: var(--bg-toolbar-light);
+  border-right: 1px solid var(--border);
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+  z-index: 990;
+  transition: transform 0.3s ease;
+  transform: translateX(-100%);
+}
 
-  /* Dunkelmodus‑Überschreibungen */
-  .dark-theme #toolbar {
-    background: var(--bg-toolbar-dark);
-    border-right-color: var(--border);
-  }
+/* Sichtbarmachen der linken Toolbar */
+#left-toolbar.visible {
+  transform: translateX(0);
+}
 
-  /* Toolbar ausblenden */
-  #toolbar.hidden {
-    display: none;
-  }
+/* ---------- Anpassungen für geöffnetes horizontales Panel ---------- */
+body.horizontal-panel-open #left-toolbar {
+  top: calc(var(--navbar-height) + var(--horizontal-panel-height));
+}
+
+/* ---------- Dunkelmodus-Überschreibungen ---------- */
+.dark-theme #left-toolbar,
+.dark-theme #horizontal-panel {
+  background: var(--bg-toolbar-dark);
+  border-color: var(--border);
+}
+
+/* ---------- Anpassungen für die fixed-form ---------- */
+/* Eingabeformular am unteren Rand fixiert */
+.fixed-form {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--input-form-height);
+  padding: .5rem calc(50% - var(--width)/2);
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  max-width: 100%;
+  z-index: 1000; /* Höherer z-index als die Toolbar */
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Anpassung für geöffnete linke Toolbar */
+body.left-toolbar-open .fixed-form {
+  padding-left: calc(var(--left-toolbar-width) + (50% - var(--width)/2));
+  transition: padding-left 0.3s ease;
+}
+
+/* Navbar Brand Bereich - für die Icons und Text */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+/* Sicherstellen, dass die Navbar richtig dargestellt wird */
+.navbar {
+  height: var(--navbar-height);
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
+}
