@@ -54,8 +54,9 @@
     </div>
   </div>
 
-  <!-- ---------- Chat‑Inhalt ---------- -->
-  <main class="chat-container" id="chat">
+<!-- ---------- Chat‑Inhalt with new wrapper structure ---------- -->
+<main class="chat-container" id="chat">
+  <div class="chat-content-wrapper">
     <div class="message right">
       <span>hello, i am ...</span>
       <span class="msg-date">10:00</span>
@@ -65,7 +66,8 @@
       <span>Sprech Deutsch …</span>
       <span class="msg-date">10:01</span>
     </div>
-  </main>
+  </div>
+</main>
 
   <form class="fixed-form" id="chatForm" autocomplete="off">
     <input type="text" name="message" placeholder="Gib deine Nachricht ein …" required>
@@ -76,3 +78,5 @@
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 {% endblock %}
+
+

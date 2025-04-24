@@ -2,24 +2,37 @@
 
 /* ---------- Chat ---------- */
 .chat-container {
-  /* sitzt fest zwischen Kopf- und Fußleiste */
+  /* Create a two-part layout: content area with max-width + full-width scrollbar area */
   position: fixed;
-  top:    var(--navbar-height);
+  top: var(--navbar-height);
   bottom: var(--input-form-height);
-  left:   0;                 /* → ganze Fensterbreite                */
-  right:  0;
+  left: 0;
+  right: 0;
 
-  width: 100%;               /* → Scroll-Leiste immer ganz rechts    */
-  max-width: var(--width);   /* inhaltlich weiterhin 800 px Limit     */
-  margin: 0 auto;            /* zentriert den Chat in der Breite      */
+  /* Remove max-width constraint from the container itself */
+  width: 100%;
+  margin: 0;
+  padding: 0; /* Remove padding from container */
 
+  /* Add inner wrapper to control content width */
+  display: flex;
+  justify-content: center;
+
+  /* Critical: ensure scrollbar is at the absolute edge */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* New inner wrapper for content with controlled width */
+.chat-content-wrapper {
+  width: 100%;
+  max-width: var(--width);
   padding: var(--pad);
+
+  /* Maintain column layout for messages */
   display: flex;
   flex-direction: column;
   gap: var(--pad);
-
-  overflow-y: auto;          /* einzig scrollbarer Bereich            */
-  overscroll-behavior: contain;
 }
 
 .message {
@@ -88,3 +101,42 @@ body.toolbar-open .fixed-form {
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* ---------- Custom Scrollbar Styling ---------- */
+/* Webkit browsers (Chrome, Edge, Safari) */
+.chat-container::-webkit-scrollbar {
+  width: 14px; /* slightly wider for better visibility */
+}
+
+.chat-container::-webkit-scrollbar-track {
+  background: transparent; /* transparent track */
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2); /* Light mode: subtle gray */
+  border-radius: 10px;
+  border: 3px solid var(--bg-page); /* creates padding effect */
+}
+
+.chat-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3); /* slightly darker on hover */
+}
+
+/* Dark theme scrollbar */
+.dark-theme .chat-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2); /* Dark mode: subtle light */
+  border: 3px solid var(--bg-page);
+}
+
+.dark-theme .chat-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Firefox */
+.chat-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* thumb and track colors */
+}
+
+.dark-theme .chat-container {
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}

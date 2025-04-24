@@ -1,7 +1,9 @@
 📂 MyAutoChat
 ├── 📝 .gitignore
 ├── 📝 InContent.txt
-├── 📄 Projektübersicht.pdf
+├── 📂 PDF/
+│   ├── 📄 Projektübersicht-Timer.pdf
+│   └── 📄 Projektübersicht.pdf
 ├── 📝 README.md
 ├── 🐍 app.py
 ├── 🐍 config.py
@@ -457,12 +459,37 @@ ul.flash-list li.flash.success {
 
 /* ---------- Chat ---------- */
 .chat-container {
+  /* Create a two-part layout: content area with max-width + full-width scrollbar area */
+  position: fixed;
+  top: var(--navbar-height);
+  bottom: var(--input-form-height);
+  left: 0;
+  right: 0;
+
+  /* Remove max-width constraint from the container itself */
+  width: 100%;
+  margin: 0;
+  padding: 0; /* Remove padding from container */
+
+  /* Add inner wrapper to control content width */
+  display: flex;
+  justify-content: center;
+
+  /* Critical: ensure scrollbar is at the absolute edge */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* New inner wrapper for content with controlled width */
+.chat-content-wrapper {
+  width: 100%;
   max-width: var(--width);
-  margin: var(--pad) auto calc(4 * var(--pad));
+  padding: var(--pad);
+
+  /* Maintain column layout for messages */
   display: flex;
   flex-direction: column;
   gap: var(--pad);
-  padding-bottom: 3rem; /* Extra space for the fixed-form */
 }
 
 .message {
@@ -529,6 +556,46 @@ body.toolbar-open .fixed-form {
 /* Dark theme adjustment for the box shadow */
 .dark-theme .fixed-form {
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ---------- Custom Scrollbar Styling ---------- */
+/* Webkit browsers (Chrome, Edge, Safari) */
+.chat-container::-webkit-scrollbar {
+  width: 14px; /* slightly wider for better visibility */
+}
+
+.chat-container::-webkit-scrollbar-track {
+  background: transparent; /* transparent track */
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2); /* Light mode: subtle gray */
+  border-radius: 10px;
+  border: 3px solid var(--bg-page); /* creates padding effect */
+}
+
+.chat-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3); /* slightly darker on hover */
+}
+
+/* Dark theme scrollbar */
+.dark-theme .chat-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2); /* Dark mode: subtle light */
+  border: 3px solid var(--bg-page);
+}
+
+.dark-theme .chat-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Firefox */
+.chat-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* thumb and track colors */
+}
+
+.dark-theme .chat-container {
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
 🎨 --- static\css\toolbar.css ---
@@ -743,28 +810,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
 📜 --- static\js\chat.js ---
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("chatForm");
-    const input = form.querySelector("input[name='message']");
-    const chat  = document.getElementById("chat");
+  const form = document.getElementById("chatForm");
+  const input = form.querySelector("input[name='message']");
+  const chat = document.getElementById("chat");
 
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      const text = input.value.trim();
-      if (!text) return;
+  // Get the content wrapper or create one if it doesn't exist yet
+  let contentWrapper = chat.querySelector(".chat-content-wrapper");
+  if (!contentWrapper) {
+      contentWrapper = document.createElement("div");
+      contentWrapper.className = "chat-content-wrapper";
+      chat.appendChild(contentWrapper);
+  }
 
-      // rechte Bubble erzeugen
-      const bubble = document.createElement("div");
-      bubble.className = "message right";
-      bubble.innerHTML = `
-        <span>${text}</span>
-        <span class="msg-date">${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
-      `;
-      chat.appendChild(bubble);
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
 
-      input.value = "";
-      bubble.scrollIntoView({behavior:"smooth"});
-    });
+    // rechte Bubble erzeugen
+    const bubble = document.createElement("div");
+    bubble.className = "message right";
+    bubble.innerHTML = `
+      <span>${text}</span>
+      <span class="msg-date">${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+    `;
+
+    // Append to the content wrapper instead of the chat container
+    contentWrapper.appendChild(bubble);
+
+    input.value = "";
+    bubble.scrollIntoView({behavior:"smooth"});
   });
+});
 
 📜 --- static\js\theme.js ---
 // static/js/theme.js
@@ -965,8 +1042,9 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
   </div>
 
-  <!-- ---------- Chat‑Inhalt ---------- -->
-  <main class="chat-container" id="chat">
+<!-- ---------- Chat‑Inhalt with new wrapper structure ---------- -->
+<main class="chat-container" id="chat">
+  <div class="chat-content-wrapper">
     <div class="message right">
       <span>hello, i am ...</span>
       <span class="msg-date">10:00</span>
@@ -976,7 +1054,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <span>Sprech Deutsch …</span>
       <span class="msg-date">10:01</span>
     </div>
-  </main>
+  </div>
+</main>
 
   <form class="fixed-form" id="chatForm" autocomplete="off">
     <input type="text" name="message" placeholder="Gib deine Nachricht ein …" required>
@@ -987,6 +1066,8 @@ document.addEventListener("DOMContentLoaded", () => {
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 {% endblock %}
+
+
 
 🌐 --- templates\login.html ---
 {% extends "base.html" %}

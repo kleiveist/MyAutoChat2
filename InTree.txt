@@ -1,7 +1,9 @@
 📂 MyAutoChat
 ├── 📝 .gitignore
 ├── 📝 InContent.txt
-├── 📄 Projektübersicht.pdf
+├── 📂 PDF/
+│   ├── 📄 Projektübersicht-Timer.pdf
+│   └── 📄 Projektübersicht.pdf
 ├── 📝 README.md
 ├── 🐍 app.py
 ├── 🐍 config.py
